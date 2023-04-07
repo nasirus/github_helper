@@ -3,7 +3,7 @@ import logging
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, make_response
 
 from github_helper import github_reply, clone_git_repo
 from llmhelper import LangchainHelper
@@ -56,7 +56,8 @@ def chat():
         "answer": result["answer"],
         "chat_history": chat_history + [(query, result["answer"])]
     }
-    return jsonify(response)
+    response = make_response(jsonify({"result": response}), 200)
+    return response
 
 
 @app.route('/qa', methods=['POST'])
@@ -65,7 +66,8 @@ def qa():
     question = data.get('question', '')
     result = langchain_helper.answer_simple_question(query=question)
 
-    return jsonify({"result": result})
+    response = make_response(jsonify({"result": result}), 200)
+    return response
 
 
 @app.route('/')
