@@ -36,5 +36,6 @@ EXPOSE 5000
 
 # Define environment variable
 ENV FLASK_APP=server.py
+ENV FLASK_ENV=production
 
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "0", "server:app"]
