@@ -3,6 +3,8 @@
 GitHub Helper is a Python Flask application that leverages GPT-based language model to automatically respond to GitHub
 issues and provide chat and Q&A functionality.
 
+It allows users to interact with a chatbot or get answers to specific questions using a language model. The script clones a specified GitHub repository containing documentation, index data and initializes a chatbot or QA system based on the model.
+
 It is built on [the Langchain library](https://github.com/hwchase17/langchain), which is built on top of GPT-based
 language models, enabling efficient and advanced natural language processing capabilities.
 
