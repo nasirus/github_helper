@@ -19,6 +19,11 @@ langchain_helper = LangchainHelper(module_name=module_name)
 chat_bot = None
 
 
+@app.route('/health', methods=['GET'])
+def health_check():
+    return jsonify({"status": "healthy"}), 200
+
+
 @app.route('/github_webhook', methods=['POST'])
 def github_webhook():
     data = request.get_json()
