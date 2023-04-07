@@ -37,4 +37,4 @@ EXPOSE 5000
 # Define environment variable
 ENV FLASK_ENV=production
 
-CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "0", "server:app"]
+CMD ["gunicorn", "--bind", "127.0.0.1:5000", "--timeout", "0", "server:app"]

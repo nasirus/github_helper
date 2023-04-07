@@ -15,8 +15,6 @@ github_link = os.environ['GITHUB_LINK']
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s %(levelname)s %(message)s')
 
 module_name = clone_git_repo(github_link, False)
-langchain_helper = LangchainHelper(module_name=module_name)
-chat_bot = None
 
 
 @app.route('/health', methods=['GET'])
@@ -27,6 +25,7 @@ def health_check():
 @app.route('/github_webhook', methods=['POST'])
 def github_webhook():
     data = request.get_json()
+    langchain_helper = LangchainHelper(module_name=module_name)
 
     if data['action'] == 'opened':
         repo_owner = data['repository']['owner']['login']
@@ -44,19 +43,13 @@ def github_webhook():
     return "OK", 200
 
 
-def get_chat_bot():
-    global chat_bot
-    if chat_bot is None:
-        chat_bot = langchain_helper.initialize_chat_bot()
-    return chat_bot
-
-
 @app.route('/chat', methods=['POST'])
 def chat():
+    langchain_helper = LangchainHelper(module_name=module_name)
     data = request.get_json()
     chat_history = data.get('chat_history', [])
     query = data.get('question', '')
-    result = get_chat_bot()({"question": query, "chat_history": chat_history})
+    result = langchain_helper.initialize_chat_bot()({"question": query, "chat_history": chat_history})
     response = {
         "answer": result["answer"],
         "chat_history": chat_history + [(query, result["answer"])]
@@ -67,6 +60,7 @@ def chat():
 
 @app.route('/qa', methods=['POST'])
 def qa():
+    langchain_helper = LangchainHelper(module_name=module_name)
     data = request.get_json()
     question = data.get('question', '')
     result = langchain_helper.answer_simple_question(query=question)
