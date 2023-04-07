@@ -11,7 +11,7 @@ from github_helper import clone_git_repo
 def main(bot_mode, github_link, question):
     load_dotenv()
     chat_history = []
-    module_name = clone_git_repo(github_link, False)
+    module_name = clone_git_repo(github_link, True)
 
     init(autoreset=True)  # Initialize colorama
 
@@ -40,7 +40,7 @@ if __name__ == "__main__":
     parser.add_argument("--bot_mode", choices=["chat", "qa"], default="chat",
                         help="Choose the mode for the bot: 'chat' or 'qa'")
     parser.add_argument("--github_link", help="The GitHub link for the repository to clone",
-                        default="https://github.com/microsoft/JARVIS.git")
+                        default="https://github.com/nasirus/github_helper.git")
     parser.add_argument("--question", default="what is github helper?", help="The question to be answered in 'qa' mode")
 
     args = parser.parse_args()
