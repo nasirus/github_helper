@@ -41,14 +41,18 @@ def remove_readonly(func, path, _):
     func(path)
 
 
-def clone_git_repo(github_link: str, reload: False, root_dir="data", root_db="db"):
-    repo_name = github_link.split('/')[-1].split('.')[0]
+def clone_git_repo(github_link: str, reload: bool = False, root_dir: str = "data", root_db: str = "db") -> str:
+    repo_name = github_link.rsplit('/', 1)[-1].split('.')[0]
     repo_path = os.path.join(root_dir, repo_name)
     db_path = os.path.join(root_db, repo_name)
-    if reload and os.path.exists(repo_path):
-        shutil.rmtree(repo_path, onerror=remove_readonly)
+
+    if reload:
+        if os.path.exists(repo_path):
+            shutil.rmtree(repo_path, onerror=remove_readonly)
         if os.path.exists(db_path):
             shutil.rmtree(db_path, onerror=remove_readonly)
-    if not os.path.exists(repo_path):
+
+    if not os.path.exists(repo_path) and not os.path.exists(db_path):
         git.Repo.clone_from(github_link, repo_path)
+
     return repo_name

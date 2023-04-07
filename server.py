@@ -2,19 +2,21 @@ import argparse
 import logging
 import os
 
+from dotenv import load_dotenv
 from flask import Flask, request, jsonify, render_template
 
 from github_helper import github_reply, clone_git_repo
 from llmhelper import LangchainHelper
 
 app = Flask(__name__)
-
-github_link = os.environ.get("GITHUB_LINK", "https://github.com/elastic/elasticsearch.git")
+load_dotenv()
+github_link = os.environ.get("GITHUB_LINK")
 
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s %(levelname)s %(message)s')
 
 module_name = clone_git_repo(github_link, False)
 langchain_helper = LangchainHelper(module_name=module_name)
+chat_bot = None
 
 
 @app.route('/github_webhook', methods=['POST'])
@@ -37,13 +39,19 @@ def github_webhook():
     return "OK", 200
 
 
+def get_chat_bot():
+    global chat_bot
+    if chat_bot is None:
+        chat_bot = langchain_helper.initialize_chat_bot()
+    return chat_bot
+
+
 @app.route('/chat', methods=['POST'])
 def chat():
     data = request.get_json()
     chat_history = data.get('chat_history', [])
     query = data.get('question', '')
-    chat_bot = langchain_helper.initialize_chat_bot()
-    result = chat_bot({"question": query, "chat_history": chat_history})
+    result = get_chat_bot()({"question": query, "chat_history": chat_history})
     response = {
         "answer": result["answer"],
         "chat_history": chat_history + [(query, result["answer"])]
@@ -74,4 +82,4 @@ if __name__ == '__main__':
     if not args.github_link == "":
         github_link = args.github_link
 
-    app.run()
+    app.run(debug=False)

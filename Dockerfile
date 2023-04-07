@@ -9,6 +9,8 @@ RUN apt-get update -y && \
 COPY requirements.txt .
 # Install any needed packages specified in requirements.txt
 RUN pip install -r requirements.txt
+# Install detectron2, used to read JPG file
+RUN pip install 'git+https://github.com/facebookresearch/detectron2.git'
 # Copy the rest of the application into the container
 COPY . .
 # Make port 5000 available to the world outside this container

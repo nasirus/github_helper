@@ -1,3 +1,4 @@
+from pathlib import Path
 import codecs
 import logging
 import os
@@ -14,7 +15,7 @@ from langchain.vectorstores import Chroma
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(message)s')
 
 
-def split_documents(documents, chunk_size=1000, chunk_overlap=200):
+def split_documents(documents, chunk_size=1000, chunk_overlap=0):
     text_splitter = langchain.text_splitter.RecursiveCharacterTextSplitter(chunk_size=chunk_size,
                                                                            chunk_overlap=chunk_overlap)
     return text_splitter.split_documents(documents)
@@ -107,17 +108,21 @@ def list_files(startpath, filetype: str = '.txt'):
     return txt_files
 
 
-def get_chroma_db(module: str,
+def get_chroma_db(module_name: str,
                   embedding: HuggingFaceEmbeddings = HuggingFaceEmbeddings(),
                   reload: bool = False) -> Chroma:
-    if os.path.exists("data/" + module) and os.path.exists("db/" + module) and not reload:
-        logging.info(f"Module: {module} found, load data")
-        return Chroma(persist_directory=("db/" + module), embedding_function=embedding)
-    elif os.path.exists("data/" + module) and (not os.path.exists("db/" + module) or reload):
-        if os.path.exists("db/" + module):
-            os.rmdir("db/" + module)
-        logging.info(f"Module: {module} found but not db, create index and load data")
-        return init_db(path="data/" + module, persist_directory="db/" + module)
+    data_dir = Path("data") / module_name
+    db_dir = Path("db") / module_name
+
+    if db_dir.exists() and not reload:
+        logging.info(f"Module: {module_name} found, load data")
+    elif data_dir.exists() and (not db_dir.exists() or reload):
+        if db_dir.exists():
+            os.rmdir(db_dir)
+        logging.info(f"Module: {module_name} found but not db, create index and load data")
+        return init_db(path=str(data_dir), persist_directory=str(db_dir))
     else:
         logging.error("module not exist")
         return None
+
+    return Chroma(persist_directory=str(db_dir), embedding_function=embedding)
