@@ -13,7 +13,7 @@ class LangchainHelper:
             deployment_name="text-davinci-003",
             model_name="text-davinci-003",
             temperature=0,
-            max_tokens=256,
+            max_tokens=512,
         )
 
     def _create_llm_chain(self):
