@@ -28,11 +28,13 @@ RUN pip install 'git+https://github.com/facebookresearch/detectron2.git'
 # Copy the rest of the application into the container
 COPY . .
 
+#Load and index model
+RUN python build.py
+
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
 # Define environment variable
 ENV FLASK_APP=server.py
 
-# Run app
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "0", "server:app"]
