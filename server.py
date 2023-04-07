@@ -10,7 +10,7 @@ from llmhelper import LangchainHelper
 
 app = Flask(__name__)
 load_dotenv()
-github_link = os.environ.get("GITHUB_LINK")
+github_link = os.environ['GITHUB_LINK']
 
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s %(levelname)s %(message)s')
 

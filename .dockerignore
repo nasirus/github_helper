@@ -2,4 +2,3 @@ venv/
 .idea/
 db/
 data/
-.env
