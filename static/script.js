@@ -1,9 +1,11 @@
+// script.js
 const messageInput = document.getElementById('message-input');
 const sendButton = document.getElementById('send-button');
 const chatMessages = document.getElementById('chat-messages');
 
-// Initialize chat history and module name
+// Initialize chat history
 const chatHistory = [];
+
 sendButton.addEventListener('click', sendMessage);
 messageInput.addEventListener('keypress', handleKeyPress);
 
@@ -32,20 +34,20 @@ async function sendMessage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          chat_history: chatHistory,
+          chat_history: chatHistory.map(({ question, answer }) => [question, answer]),
           question: messageText,
         }),
       });
 
       const result = await response.json();
       const answerElement = document.createElement('div');
-      answerElement.textContent = result.answer;
+      answerElement.textContent = result.result.answer;
       answerElement.classList.add('answer');
       chatMessages.appendChild(answerElement);
       chatMessages.scrollTop = chatMessages.scrollHeight;
 
       // Update chat history with the new message and answer
-      chatHistory.push({ question: messageText, answer: result.answer });
+      chatHistory.push({ question: messageText, answer: result.result.answer });
     } catch (error) {
       console.error('Error sending message:', error);
     }
