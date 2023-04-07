@@ -18,5 +18,5 @@ EXPOSE 5000
 # Define environment variable
 ENV FLASK_APP=server.py
 # Run app
-CMD ["gunicorn", "--bind", "0.0.0.0:8000","--timeout","0", "server:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000","--timeout","0", "server:app"]
 

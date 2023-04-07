@@ -1,3 +1,5 @@
+[![Build Az](https://github.com/nasirus/github_helper/actions/workflows/main_nasirus-github-helper.yml/badge.svg)](https://github.com/nasirus/github_helper/actions/workflows/main_nasirus-github-helper.yml)
+
 # 💻 ❓ GitHub Helper
 
 GitHub Helper is a Python Flask application that leverages GPT-based language model to automatically respond to GitHub
