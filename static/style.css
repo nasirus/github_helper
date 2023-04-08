@@ -53,11 +53,40 @@ button {
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #1976d2;
 }
 
 .prompt {
-  color: #1a73e8; /* Adjust the color to your preference */
+  color: #1a73e8;
 }
 .answer {
-  color: #34a853; /* Adjust the color to your preference */
+  color: #34a853;
+}
+
+/* Media query for small screens and mobile devices */
+@media (max-width: 600px) {
+  .chat-container {
+    max-width: 100%;
+    border: none;
+  }
+
+  input[type="text"] {
+    font-size: 16px;
+  }
+
+  button {
+    font-size: 16px;
+  }
+
+  .chat-messages {
+    padding: 1rem 0.5rem;
+  }
+
+  .chat-input {
+    padding: 0.5rem;
+  }
 }
