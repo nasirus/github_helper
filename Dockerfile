@@ -4,12 +4,12 @@ FROM python:3.10
 # Set the working directory
 WORKDIR /app
 
-# Update the Debian OS
+# Update the Debian OS, install virtualenv, and clean up the apt cache
 RUN apt-get update -y && \
-    apt-get upgrade -y
-
-# Install virtualenv
-RUN pip install virtualenv
+    apt-get upgrade -y && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip install virtualenv
 
 # Create a virtual environment and activate it
 RUN virtualenv venv
@@ -34,4 +34,4 @@ RUN python build.py
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
-CMD ["gunicorn", "--bind", "127.0.0.1:5000", "--timeout", "0", "server:app"]
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "--timeout", "0", "server:app"]
