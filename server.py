@@ -1,9 +1,11 @@
 import argparse
+import hashlib
+import hmac
 import logging
 import os
 
 from dotenv import load_dotenv
-from flask import Flask, request, jsonify, render_template, make_response
+from flask import Flask, request, jsonify, render_template, make_response, abort
 
 from github_helper import github_reply, clone_git_repo, get_issue_comments
 from llmhelper import LangchainHelper
@@ -11,6 +13,7 @@ from llmhelper import LangchainHelper
 app = Flask(__name__)
 load_dotenv()
 github_link = os.environ['GITHUB_LINK']
+secret_key = os.environ.get('GITHUB_WEBHOOK_SECRET')
 
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s %(levelname)s %(message)s')
 
@@ -24,6 +27,21 @@ def health_check():
 
 @app.route('/github_webhook', methods=['POST'])
 def github_webhook():
+    webhook_secret = secret_key.encode()
+
+    # Get the signature from the request headers
+    signature = request.headers.get('X-Hub-Signature-256')
+
+    if not signature:
+        abort(400, 'Missing signature header')
+
+    # Calculate the expected signature using the request payload and webhook secret
+    expected_signature = 'sha256=' + hmac.new(webhook_secret, request.data, hashlib.sha256).hexdigest()
+
+    # Verify the signature
+    if not hmac.compare_digest(signature, expected_signature):
+        abort(401, 'Invalid signature')
+
     data = request.get_json()
 
     # Check if the payload is for an issue event
