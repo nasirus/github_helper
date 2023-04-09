@@ -19,7 +19,7 @@ language models, enabling efficient and advanced natural language processing cap
 
 * Automatically reply to newly opened GitHub issues using knowledge from repository
 
-* Reply to Issue Comments with Mention "@githelper"
+* Reply to Issue Comments with Mention "@bothelper"
 
 * Provides a simple web-based chat UI for user interaction and testing of the chatbot
 
@@ -122,10 +122,10 @@ using the LangchainHelper module, and post that response as a comment on the iss
 
 ### Reply to Issue Comments with Mention
 
-The GitHub Helper Bot can reply to issue comments when specifically mentioned using "@githelper" in the comment. This
+The GitHub Helper Bot can reply to issue comments when specifically mentioned using "@bothelper" in the comment. This
 feature allows the bot to listen for new issue comments and respond when the bot is mentioned.
 
-To use this feature, simply mention "@githelper" in your issue comment when you want the bot to respond to it. This
+To use this feature, simply mention "@bothelper" in your issue comment when you want the bot to respond to it. This
 helps in reducing the noise in the issue thread, as the bot will only reply when explicitly mentioned.
 
 #### How to set up GitHub Webhook
