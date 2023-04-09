@@ -14,7 +14,6 @@ app = Flask(__name__)
 load_dotenv()
 github_link = os.environ['GITHUB_LINK']
 secret_key = os.environ.get('GITHUB_WEBHOOK_SECRET')
-print(secret_key)
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s %(levelname)s %(message)s')
 
 

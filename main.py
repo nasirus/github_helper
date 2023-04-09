@@ -5,13 +5,13 @@ from colorama import init, Fore
 from dotenv import load_dotenv
 
 import llmhelper
-from github_helper import clone_git_repo
+from github_helper import clone_git_repo, get_github_link
 
 
-def main(bot_mode, github_link, question):
+def main(bot_mode, git_link, question):
     load_dotenv()
     chat_history = []
-    module_name = clone_git_repo(github_link, False)
+    module_name = clone_git_repo(git_link, False)
 
     init(autoreset=True)  # Initialize colorama
 
@@ -37,12 +37,14 @@ def print_wrapped_text(text, width=80):
 
 
 if __name__ == "__main__":
+    load_dotenv()
     parser = argparse.ArgumentParser(description="Langchain Chatbot and QA")
     parser.add_argument("--bot_mode", choices=["chat", "qa"], default="chat",
                         help="Choose the mode for the bot: 'chat' or 'qa'")
-    parser.add_argument("--github_link", help="The GitHub link for the repository to clone",
-                        default="https://github.com/yoheinakajima/babyagi")
+    parser.add_argument('--github_link', type=str, required=False,
+                        help='GitHub repository link (optional)')
     parser.add_argument("--question", default="what is github helper?", help="The question to be answered in 'qa' mode")
 
     args = parser.parse_args()
-    main(args.bot_mode, args.github_link, args.question)
+    github_link = get_github_link(args.github_link)
+    main(args.bot_mode, github_link, args.question)
