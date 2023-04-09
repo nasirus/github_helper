@@ -7,17 +7,15 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, render_template, make_response, abort
 
-from github_helper import github_reply, clone_git_repo, get_issue_comments
+from github_helper import github_reply, clone_git_repo, get_issue_comments, get_github_link
 from llmhelper import LangchainHelper
 
 app = Flask(__name__)
 load_dotenv()
 github_link = os.environ['GITHUB_LINK']
 secret_key = os.environ.get('GITHUB_WEBHOOK_SECRET')
-
+print(secret_key)
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s %(levelname)s %(message)s')
-
-module_name = clone_git_repo(github_link, False)
 
 
 @app.route('/health', methods=['GET'])
@@ -48,8 +46,6 @@ def github_webhook():
     if not ('repository' in data and 'issue' in data and 'action' in data):
         return "Payload not related to issues, ignoring", 200
 
-    langchain_helper = LangchainHelper(module_name=module_name)
-
     repo_owner = data['repository']['owner']['login']
     repo_name = data['repository']['name']
     issue_number = data['issue']['number']
@@ -70,7 +66,7 @@ def github_webhook():
         elif data['action'] == 'created':
             issue_comment = data['comment']['body']
 
-            if issue_comment and "@githelper" in issue_comment:
+            if issue_comment and "@bothelper" in issue_comment:
                 previous_comments = get_issue_comments(repo_owner, repo_name, issue_number)
                 issue_comment = previous_comments
 
@@ -85,7 +81,6 @@ def github_webhook():
 
 @app.route('/chat', methods=['POST'])
 def chat():
-    langchain_helper = LangchainHelper(module_name=module_name)
     data = request.get_json()
     chat_history = data.get('chat_history', [])
     query = data.get('question', '')
@@ -100,7 +95,6 @@ def chat():
 
 @app.route('/qa', methods=['POST'])
 def qa():
-    langchain_helper = LangchainHelper(module_name=module_name)
     data = request.get_json()
     question = data.get('question', '')
     result = langchain_helper.answer_simple_question(query=question)
@@ -116,11 +110,14 @@ def index():
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='CLI for Langchain script')
-    parser.add_argument('--github_link', type=str, required=False, default="",
+    parser.add_argument('--github_link', type=str, required=False,
                         help='GitHub repository link (optional)')
+    parser.add_argument('--reload', action='store_true',
+                        help='Reload the git repository if set, otherwise use existing one')
     args = parser.parse_args()
 
-    if not args.github_link == "":
-        github_link = args.github_link
+    github_link = get_github_link(args.github_link)
+    module_name = clone_git_repo(github_link, args.reload)
+    langchain_helper = LangchainHelper(module_name=module_name)
 
     app.run(debug=False)

@@ -11,12 +11,14 @@ from github_helper import clone_git_repo
 def main(bot_mode, github_link, question):
     load_dotenv()
     chat_history = []
-    module_name = clone_git_repo(github_link, True)
+    module_name = clone_git_repo(github_link, False)
 
     init(autoreset=True)  # Initialize colorama
 
+    langchain_helper = llmhelper.LangchainHelper(module_name=module_name)
+
     if bot_mode == "chat":
-        chat_bot = llmhelper.LangchainHelper(module_name=module_name).initialize_chat_bot()
+        chat_bot = langchain_helper.initialize_chat_bot()
         print(f"Start chat with {module_name}, type your question")
 
         while True:
@@ -25,7 +27,6 @@ def main(bot_mode, github_link, question):
             chat_history.append((query, result["answer"]))
             print_wrapped_text(Fore.BLUE + "-->" + result["answer"].lstrip())
     elif bot_mode == "qa":
-        langchain_helper = llmhelper.LangchainHelper(module_name=module_name)
         result = langchain_helper.answer_simple_question(query=question)
         print(Fore.BLUE + result.lstrip())
 
@@ -40,7 +41,7 @@ if __name__ == "__main__":
     parser.add_argument("--bot_mode", choices=["chat", "qa"], default="chat",
                         help="Choose the mode for the bot: 'chat' or 'qa'")
     parser.add_argument("--github_link", help="The GitHub link for the repository to clone",
-                        default="https://github.com/nasirus/github_helper.git")
+                        default="https://github.com/yoheinakajima/babyagi")
     parser.add_argument("--question", default="what is github helper?", help="The question to be answered in 'qa' mode")
 
     args = parser.parse_args()
