@@ -28,10 +28,10 @@ def main(bot_mode, git_link, question):
             print_wrapped_text(Fore.BLUE + "-->" + result["answer"].lstrip())
     elif bot_mode == "qa":
         result = langchain_helper.answer_simple_question(query=question)
-        print(Fore.BLUE + result.lstrip())
+        print_wrapped_text(Fore.BLUE + result.lstrip())
 
 
-def print_wrapped_text(text, width=80):
+def print_wrapped_text(text, width=150):
     wrapped_text = textwrap.fill(text, width=width)
     print(wrapped_text)
 
