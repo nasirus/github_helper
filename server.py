@@ -5,7 +5,7 @@ import os
 from dotenv import load_dotenv
 from flask import Flask, request, jsonify, render_template, make_response
 
-from github_helper import github_reply, clone_git_repo
+from github_helper import github_reply, clone_git_repo, get_issue_comments
 from llmhelper import LangchainHelper
 
 app = Flask(__name__)
@@ -25,20 +25,42 @@ def health_check():
 @app.route('/github_webhook', methods=['POST'])
 def github_webhook():
     data = request.get_json()
+
+    # Check if the payload is for an issue event
+    if not ('repository' in data and 'issue' in data and 'action' in data):
+        return "Payload not related to issues, ignoring", 200
+
     langchain_helper = LangchainHelper(module_name=module_name)
 
-    if data['action'] == 'opened':
-        repo_owner = data['repository']['owner']['login']
-        repo_name = data['repository']['name']
-        issue_number = data['issue']['number']
-        issue_title = data['issue']['title']
-        issue_comment = data['issue']['body']
+    repo_owner = data['repository']['owner']['login']
+    repo_name = data['repository']['name']
+    issue_number = data['issue']['number']
+    issue_title = data['issue']['title']
+    issue_state = data['issue']['state']
 
-        result = langchain_helper.assist_github_issue(issue_title=issue_title, issue_comment=issue_comment)
-        print(result[0]['text'])
+    if issue_state != 'closed':
 
-        github_reply(repo_owner=repo_owner, repo_name=repo_name, issue_number=issue_number,
-                     comment_body=result[0]['text'])
+        if data['action'] == 'opened':
+            issue_comment = data['issue']['body']
+
+            result = langchain_helper.assist_github_issue(issue_title=issue_title, issue_comment=issue_comment)
+            logging.info(result[0]['text'])
+
+            github_reply(repo_owner=repo_owner, repo_name=repo_name, issue_number=issue_number,
+                         comment_body=result[0]['text'])
+
+        elif data['action'] == 'created':
+            issue_comment = data['comment']['body']
+
+            if issue_comment and "@githelper" in issue_comment:
+                previous_comments = get_issue_comments(repo_owner, repo_name, issue_number)
+                issue_comment = previous_comments
+
+                result = langchain_helper.assist_github_issue(issue_title=issue_title, issue_comment=issue_comment)
+                logging.info(result[0]['text'])
+
+                github_reply(repo_owner=repo_owner, repo_name=repo_name, issue_number=issue_number,
+                             comment_body=result[0]['text'])
 
     return "OK", 200
 

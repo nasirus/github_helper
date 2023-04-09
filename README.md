@@ -19,6 +19,8 @@ language models, enabling efficient and advanced natural language processing cap
 
 * Automatically reply to newly opened GitHub issues using knowledge from repository
 
+* Reply to Issue Comments with Mention "@githelper"
+
 * Provides a simple web-based chat UI for user interaction and testing of the chatbot
 
 * Provides a command line for interacting
@@ -40,7 +42,7 @@ cd github-helper`
 
 Edit the .env file and set the GITHUB_LINK environment variable with the GitHub repository link and OPENAI_API_KEY
 
-`GITHUB_LINK=https://github.com/yoheinakajima/babyagi.git`
+`GITHUB_LINK=`
 `OPENAI_API_KEY=`
 
 3. Build the Docker image:
@@ -90,6 +92,12 @@ using the LangchainHelper module, and post that response as a comment on the iss
   to generate a helpful response.
 
 * Comment posting: The generated response is posted as a comment on the issue using the github_reply function.
+
+### Reply to Issue Comments with Mention
+
+The GitHub Helper Bot can reply to issue comments when specifically mentioned using "@githelper" in the comment. This feature allows the bot to listen for new issue comments and respond when the bot is mentioned.
+
+To use this feature, simply mention "@githelper" in your issue comment when you want the bot to respond to it. This helps in reducing the noise in the issue thread, as the bot will only reply when explicitly mentioned.
 
 #### Usage
 

@@ -1,14 +1,15 @@
+import os
 import shutil
 import stat
 
 import git
 import requests
-import os
 
 
 def github_reply(repo_owner: str, repo_name: str, issue_number: str, comment_body: str):
     # get the value of the "GITHUB_TOKEN" environment variable
-    access_token = os.environ.get('GITHUB_TOKEN')
+    access_token = os.environ['GITHUB_TOKEN']
+
     """
     Post a comment on a given GitHub issue.
 
@@ -20,19 +21,42 @@ def github_reply(repo_owner: str, repo_name: str, issue_number: str, comment_bod
     api_url = f'https://api.github.com/repos/{repo_owner}/{repo_name}/issues/{issue_number}/comments'
     headers = {
         'Authorization': f'token {access_token}',
-        'Accept': 'application/vnd.github.text+json',
+        'Accept': 'application/vnd.github+json',
     }
 
     payload = {
         'body': comment_body,
     }
 
+    response = None
     try:
         response = requests.post(api_url, headers=headers, json=payload)
         response.raise_for_status()
         print('Comment posted successfully.')
     except requests.exceptions.HTTPError as e:
         print(f'Failed to post comment. Status code: {response.status_code}. Error: {e}')
+
+
+def get_issue_comments(repo_owner, repo_name, issue_number):
+    access_token = os.environ.get('GITHUB_TOKEN')
+    url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/issues/{issue_number}/comments"
+    headers = {
+        "Authorization": f"token {access_token}",
+        "Accept": "application/vnd.github+json"
+    }
+    response = requests.get(url, headers=headers)
+
+    if response.status_code != 200:
+        return f"Error: Received status code {response.status_code} from GitHub API."
+
+    comments_data = response.json()
+
+    if isinstance(comments_data, dict):
+        comments_data = [comments_data]
+    elif not isinstance(comments_data, list):
+        return ""
+
+    return "\n".join([comment["body"] for comment in comments_data])
 
 
 def remove_readonly(func, path, _):

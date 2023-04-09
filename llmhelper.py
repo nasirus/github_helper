@@ -18,12 +18,13 @@ class LangchainHelper:
 
     def _create_llm_chain(self):
         prompt_template = """
-        A user has opened an issue on Longchain's GitHub repository with the following title:
+        Act as a github repository owner for a project called """ + self.module_name + """ 
+        A user has opened an issue with the following title:
         issue_title : {issue_title}
         issue_comment : {issue_comment}
         Context: {context}
         Please provide a response, code example, code correction, explanation, and resources used.
-        Start immediately with the response; your answer will be posted directly on GitHub.
+        Your answer will be posted directly on GitHub.
         """
 
         prompt = PromptTemplate(
