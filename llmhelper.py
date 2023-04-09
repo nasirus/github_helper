@@ -13,18 +13,31 @@ class LangchainHelper:
             deployment_name="text-davinci-003",
             model_name="text-davinci-003",
             temperature=0,
-            max_tokens=512,
+            max_tokens=1024,
         )
 
     def _create_llm_chain(self):
         prompt_template = """
-        Act as a github repository owner for a project called """ + self.module_name + """ 
-        A user has opened an issue with the following title:
-        issue_title : {issue_title}
-        issue_comment : {issue_comment}
-        Context: {context}
-        Please provide a response, code example, code correction, explanation, and resources used.
-        Your answer will be posted directly on GitHub.
+            As a GitHub repository owner for a project called """ + self.module_name + """, I have received an issue with the following details:
+            
+            Issue title: {issue_title}
+            Issue comment: {issue_comment}
+            Context: {context}
+            
+            Based on the information provided, please find below my response, code examples or corrections, explanation, and resources used. This response will be posted directly on GitHub.
+            
+            Title: {issue_title}
+            Response:
+            
+            {response}
+            Code example or correction:
+            
+            {code_example_or_correction}
+            Explanation:
+            {explanation}
+            
+            Resources used:
+            {resources_used}
         """
 
         prompt = PromptTemplate(

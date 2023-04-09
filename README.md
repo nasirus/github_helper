@@ -43,6 +43,7 @@ cd github-helper`
 Edit the .env file and set the GITHUB_LINK environment variable with the GitHub repository link and OPENAI_API_KEY
 
 `GITHUB_LINK=`
+
 `OPENAI_API_KEY=`
 
 3. Build the Docker image:
@@ -66,13 +67,36 @@ cd github-helper`
 
 `pip install -r requirements.txt`
 
-## 1 - Run the Flask application:
+### a - Run the Flask application (For chat UI):
+
+The Github repository used by default is the value defined in .env file "`GITHUB_LINK=`"
 
 `python server.py`
 
-## 2 - Run console chat:
+you can access the application at http://127.0.0.1:5000.
+
+### b - Run console chat (Command line for interacting):
 
 `python main.py`
+
+Github Helper provides a chatbot or a simple question-answering bot utilizing
+OpenAI's GPT-based language models. The script allows users to switch between two modes: chat mode for a more
+interactive conversation and QA mode for quick one-time question-answering.
+
+`python main.py [--bot_mode <mode>] [--github_link <link>] [--question <question>]`
+
+* --bot_mode: Specify the mode for the bot, either chat or qa. Defaults to chat.
+
+* --github_link: Provide the GitHub repository link (optional).
+
+* --question: The question to be answered in 'qa' mode. Defaults to "what is github helper?".
+
+Exemple :
+
+`python main.py --github_link https://github.com/nasirus/github_helper --bot_mode chat`
+
+`python main.py --github_link https://github.com/nasirus/github_helper --bot_mode qa --question
+"What is github helper ?"`
 
 ## Usage
 
@@ -104,7 +128,7 @@ feature allows the bot to listen for new issue comments and respond when the bot
 To use this feature, simply mention "@githelper" in your issue comment when you want the bot to respond to it. This
 helps in reducing the noise in the issue thread, as the bot will only reply when explicitly mentioned.
 
-#### Usage
+#### How to set up GitHub Webhook
 
 To use the GitHub webhook functionality in your app, follow these steps:
 
