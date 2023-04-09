@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 from flask import Flask, request
 from flask import jsonify, render_template, make_response, abort
 
-from github_helper import github_reply, clone_git_repo, get_issue_comments
+from github_helper import github_reply, clone_git_repo
 from llmhelper import LangchainHelper
 
 app = Flask(__name__)
@@ -70,8 +70,6 @@ def github_webhook():
             issue_comment = data['comment']['body']
 
             if issue_comment and "@bothelper" in issue_comment:
-                previous_comments = get_issue_comments(repo_owner, repo_name, issue_number)
-                issue_comment = previous_comments
 
                 result = langchain_helper.assist_github_issue(issue_title=issue_title, issue_comment=issue_comment)
                 logging.info(result[0]['text'])
