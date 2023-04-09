@@ -18,26 +18,15 @@ class LangchainHelper:
 
     def _create_llm_chain(self):
         prompt_template = """
-            As a GitHub repository owner for a project called """ + self.module_name + """, I have received an issue with the following details:
+            As a GitHub repository owner for a project called """ + self.module_name + """, I have received an issue 
+            with the following details:
             
             Issue title: {issue_title}
             Issue comment: {issue_comment}
             Context: {context}
             
-            Based on the information provided, please find below my response, code examples or corrections, explanation, and resources used. This response will be posted directly on GitHub.
-            
-            Title: {issue_title}
-            Response:
-            
-            {response}
-            Code example or correction:
-            
-            {code_example_or_correction}
-            Explanation:
-            {explanation}
-            
-            Resources used:
-            {resources_used}
+            Based on the information provided, please find below my response, code examples or corrections, explanation, 
+            and resources used. This response will be posted directly on GitHub.
         """
 
         prompt = PromptTemplate(
