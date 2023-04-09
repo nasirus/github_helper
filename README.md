@@ -78,8 +78,8 @@ cd github-helper`
 
 ### GitHub Webhook Functionality for Your Repository
 
-In your repo, the GitHub webhook functionality is used to automatically respond to new issues opened in the specified
-repository. When a new issue is opened, your app will analyze the issue title and body, generate a helpful response
+The GitHub webhook functionality is used to automatically respond to new issues opened in the specified
+repository. When a new issue is opened, your bot will analyze the issue title and body, generate a helpful response
 using the LangchainHelper module, and post that response as a comment on the issue.
 
 #### Key Components
@@ -93,11 +93,16 @@ using the LangchainHelper module, and post that response as a comment on the iss
 
 * Comment posting: The generated response is posted as a comment on the issue using the github_reply function.
 
+* Security : allows you to receive and process GitHub webhooks while ensuring the authenticity of incoming requests by
+  verifying the secret key.
+
 ### Reply to Issue Comments with Mention
 
-The GitHub Helper Bot can reply to issue comments when specifically mentioned using "@githelper" in the comment. This feature allows the bot to listen for new issue comments and respond when the bot is mentioned.
+The GitHub Helper Bot can reply to issue comments when specifically mentioned using "@githelper" in the comment. This
+feature allows the bot to listen for new issue comments and respond when the bot is mentioned.
 
-To use this feature, simply mention "@githelper" in your issue comment when you want the bot to respond to it. This helps in reducing the noise in the issue thread, as the bot will only reply when explicitly mentioned.
+To use this feature, simply mention "@githelper" in your issue comment when you want the bot to respond to it. This
+helps in reducing the noise in the issue thread, as the bot will only reply when explicitly mentioned.
 
 #### Usage
 

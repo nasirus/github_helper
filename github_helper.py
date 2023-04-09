@@ -80,3 +80,14 @@ def clone_git_repo(github_link: str, reload: bool = False, root_dir: str = "data
         git.Repo.clone_from(github_link, repo_path)
 
     return repo_name
+
+
+def get_github_link(args_github_link):
+    if args_github_link:
+        return args_github_link
+    else:
+        env_github_link = os.environ.get('GITHUB_LINK')
+        if env_github_link:
+            return env_github_link
+        else:
+            raise ValueError("GitHub link not provided in the command line or environment variables")

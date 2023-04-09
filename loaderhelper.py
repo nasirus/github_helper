@@ -1,8 +1,9 @@
+import shutil
 from pathlib import Path
 import codecs
 import logging
 import os
-from typing import Dict
+from typing import Dict, Optional
 
 import langchain.text_splitter
 import pypdf
@@ -45,29 +46,29 @@ def init_db(path: str,
         except UnicodeDecodeError:
             return False
 
-    def load_files(filetype: str, loader_class: type):
-        list_files_result = list_files(path, filetype=filetype)
-        logging.info(f"Found {len(list_files_result)} {filetype} files in {path}")
+    def load_files(file_type: str, class_loader: type):
+        list_files_result = list_files(path, filetype=file_type)
+        logging.info(f"Found {len(list_files_result)} {file_type} files in {path}")
 
         for file in list_files_result:
 
-            if filetype == '.txt':
+            if file_type == '.txt':
                 if not is_utf8(file):
                     logging.warning(f"Skipping non-UTF-8 file {file}")
                     continue
-            if filetype == '.asciidoc':
+            if file_type == '.asciidoc':
                 if not is_utf8(file):
                     logging.warning(f"Skipping non-UTF-8 file {file}")
                     continue
 
-            if filetype == '.ipynb':
-                loader = loader_class(path=file, include_outputs=False, remove_newline=True)
-            elif filetype == '.txt':
-                loader = loader_class(file_path=file, encoding="utf-8")
-            elif filetype == '.asciidoc':
-                loader = loader_class(file_path=file, encoding="utf-8")
+            if file_type == '.ipynb':
+                loader = class_loader(path=file, include_outputs=False, remove_newline=True)
+            elif file_type == '.txt':
+                loader = class_loader(file_path=file, encoding="utf-8")
+            elif file_type == '.asciidoc':
+                loader = class_loader(file_path=file, encoding="utf-8")
             else:
-                loader = loader_class(file)
+                loader = class_loader(file)
 
             logging.info(f"Loading file {file}...")
             documents = loader.load()
@@ -110,19 +111,19 @@ def list_files(startpath, filetype: str = '.txt'):
 
 def get_chroma_db(module_name: str,
                   embedding: HuggingFaceEmbeddings = HuggingFaceEmbeddings(),
-                  reload: bool = False) -> Chroma:
+                  reload: bool = False) -> Optional[Chroma]:
     data_dir = Path("data") / module_name
     db_dir = Path("db") / module_name
 
     if db_dir.exists() and not reload:
         logging.info(f"Module: {module_name} found, load data")
+        return Chroma(persist_directory=str(db_dir), embedding_function=embedding)
     elif data_dir.exists() and (not db_dir.exists() or reload):
         if db_dir.exists():
-            os.rmdir(db_dir)
+            shutil.rmtree(db_dir)  # Use shutil.rmtree to remove the directory and its contents
+        db_dir.mkdir(parents=True, exist_ok=True)  # Create the db_dir if it doesn't exist
         logging.info(f"Module: {module_name} found but not db, create index and load data")
         return init_db(path=str(data_dir), persist_directory=str(db_dir))
     else:
         logging.error("module not exist")
         return None
-
-    return Chroma(persist_directory=str(db_dir), embedding_function=embedding)
