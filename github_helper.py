@@ -25,7 +25,7 @@ def github_reply(repo_owner: str, repo_name: str, issue_number: str, comment_bod
     }
 
     payload = {
-        'body': comment_body,
+        'body': comment_body.strip(),
     }
 
     response = None
