@@ -33,43 +33,77 @@ deploy the GitHub Helper using Docker:
 
 1. Clone this repository:
 
-`git clone https://github.com/nasirus/github_helper.git
-cd github-helper`
+    `git clone https://github.com/nasirus/github_helper.git
+    cd github-helper`
 
 2. Set the required environment variables:
+    
+    `cp .env.example .env`
+    
+    Edit the .env file and set the GITHUB_LINK environment variable with the GitHub repository link and OPENAI_API_KEY
+    
+    `FLASK_DEBUG=False`
+    
+    `GITHUB_LINK=https://github.com/nasirus/github_helper`
+    
+    `OPENAI_API_KEY=`
 
-`cp .env.example .env`
+    `OPENAI_API_BASE=`
+    
+    `OPENAI_API_TYPE=azure`
 
-Edit the .env file and set the GITHUB_LINK environment variable with the GitHub repository link and OPENAI_API_KEY
-
-`GITHUB_LINK=`
-
-`OPENAI_API_KEY=`
+    `GITHUB_TOKEN=`
+    
+    `GITHUB_WEBHOOK_SECRET=`
+NB:
+    
+    - This example uses Azure OpenAI. If you want to use another LLM, you can set up
+      any [Langchain model](https://python.langchain.com/en/latest/modules/models/llms/integrations.html)
+      in [this file](https://github.com/nasirus/github_helper/blob/main/llmhelper.py#L12)
+      - `GITHUB_TOKEN` and `GITHUB_WEBHOOK_SECRET` are required only if you want to set up auto-reply in issues.
+      - `OPENAI_API_BASE` and `OPENAI_API_TYPE` are required only if you use AzureOpenAI
 
 3. Build the Docker image:
 
-`docker build -t github-helper .`
+    `docker build -t github-helper .`
 
 4. Run the Docker container:
 
-`docker run -d -p 5000:5000 --name github-helper --env-file .env github-helper`
-
-Once the container is running, you can access the application at http://127.0.0.1:5000.
+    `docker run -d -p 5000:5000 --name github-helper --env-file .env github-helper`
+    
+    Once the container is running, you can access the application at http://localhost:5000/.
 
 ## How to run manually
 
 1. Clone this repository:
 
-`git clone https://github.com/nasirus/github_helper.git
-cd github-helper`
+    `git clone https://github.com/nasirus/github_helper.git`
+    
+    `cd github_helper`
 
-2. Install the required dependencies:
+2. [Set the required environment variables:](#Docker)
 
-`pip install -r requirements.txt`
+3. Create a virtual environment.
+
+    `python -m venv myvenv`
+
+4. To activate the virtual environment, use the appropriate command for your operating system:
+
+    . For Windows:
+
+    myvenv\Scripts\activate.bat
+  
+    . For macOS and Linux:
+  
+    source myvenv/bin/activate
+
+5. Install the required dependencies:
+
+    `pip install -r requirements.txt`
 
 ### a - Run the Flask application (For chat UI):
 
-The Github repository used by default is the value defined in .env file "`GITHUB_LINK=`"
+The GitHub repository used by default is the value defined in .env file "`GITHUB_LINK=`"
 
 `python server.py`
 
@@ -79,7 +113,7 @@ you can access the application at http://127.0.0.1:5000.
 
 `python main.py`
 
-Github Helper provides a chatbot or a simple question-answering bot utilizing
+GitHub Helper provides a chatbot or a simple question-answering bot utilizing
 OpenAI's GPT-based language models. The script allows users to switch between two modes: chat mode for a more
 interactive conversation and QA mode for quick one-time question-answering.
 
@@ -91,12 +125,11 @@ interactive conversation and QA mode for quick one-time question-answering.
 
 * --question: The question to be answered in 'qa' mode. Defaults to "what is github helper?".
 
-Exemple :
+Example :
 
 `python main.py --github_link https://github.com/nasirus/github_helper --bot_mode chat`
 
-`python main.py --github_link https://github.com/nasirus/github_helper --bot_mode qa --question
-"What is github helper ?"`
+`python main.py --github_link https://github.com/nasirus/github_helper --bot_mode qa --question "What is github helper ?"`
 
 ## Usage
 
@@ -134,14 +167,15 @@ To use the GitHub webhook functionality in your app, follow these steps:
 
 1. Set up a webhook in your GitHub repository:
 
-* Go to the repository settings on GitHub.
-* Click on "Webhooks" in the left sidebar.
-* Click "Add webhook."
-* Enter your app's URL followed by /github_webhook in the "Payload URL" field (
-  e.g., https://yourappdomain.com/github_webhook).
-* Select "application/json" as the "Content type."
-* Choose the "Let me select individual events" option and check the "Issues" event.
-* Click "Add webhook" to save your settings.
+   * Go to the repository settings on GitHub.
+   * Click on "Webhooks" in the left sidebar.
+   * Click "Add webhook."
+   * Enter your app's URL followed by /github_webhook in the "Payload URL" field (
+     e.g., https://yourappdomain.com/github_webhook).
+   * Select "application/json" as the "Content type."
+   * Choose the "Let me select individual events" option and check the "Issues" event.
+   * Enter your Secret (Must be the same as defined in .env file `GITHUB_WEBHOOK_SECRET`)
+   * Click "Add webhook" to save your settings.
 
 2. Ensure that the GITHUB_LINK environment variable is set to the repository URL in your .env file.
 

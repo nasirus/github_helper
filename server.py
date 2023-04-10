@@ -13,7 +13,7 @@ from llmhelper import LangchainHelper
 app = Flask(__name__)
 
 load_dotenv()
-github_link = os.environ['GITHUB_LINK']
+github_link = os.environ.get('GITHUB_LINK')
 secret_key = os.environ.get('GITHUB_WEBHOOK_SECRET')
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s %(levelname)s %(message)s')
 
@@ -70,7 +70,6 @@ def github_webhook():
             issue_comment = data['comment']['body']
 
             if issue_comment and "@bothelper" in issue_comment:
-
                 result = langchain_helper.assist_github_issue(issue_title=issue_title, issue_comment=issue_comment)
                 logging.info(result[0]['text'])
 
