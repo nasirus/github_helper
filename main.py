@@ -8,9 +8,9 @@ import llmhelper
 from github_helper import clone_git_repo, get_github_link
 
 
-def main(bot_mode, git_link, question):
+def main(bot_mode, git_link, question, reload_repo):
     chat_history = []
-    module_name = clone_git_repo(git_link, False)
+    module_name = clone_git_repo(git_link, reload_repo)
 
     init(autoreset=True)  # Initialize colorama
 
@@ -43,7 +43,8 @@ if __name__ == "__main__":
     parser.add_argument('--github_link', type=str, required=False,
                         help='GitHub repository link (optional)')
     parser.add_argument("--question", default="what is github helper?", help="The question to be answered in 'qa' mode")
+    parser.add_argument('--reload', action='store_true', help='Reload the git repository if it already exists locally')
 
     args = parser.parse_args()
     github_link = get_github_link(args.github_link)
-    main(args.bot_mode, github_link, args.question)
+    main(args.bot_mode, github_link, args.question, args.reload)

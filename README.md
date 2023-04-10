@@ -59,10 +59,15 @@ deploy the GitHub Helper using Docker:
     `OPENAI_API_TYPE=azure`
 
     `GITHUB_TOKEN=`
+
+     [creating-a-personal-access-token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
     
     `GITHUB_WEBHOOK_SECRET=`
 
-    NB:    
+    Generate a random secret
+
+    NB:
+
    - This example uses Azure OpenAI LLM by default. If you want to use another LLM, you can set up any [Langchain model](https://python.langchain.com/en/latest/modules/models/llms/integrations.html) in [this file](https://github.com/nasirus/github_helper/blob/main/llmhelper.py#L12) .
 
    - `GITHUB_TOKEN` and `GITHUB_WEBHOOK_SECRET` are required only if you want to set up auto-reply in issues.
@@ -126,10 +131,9 @@ interactive conversation and QA mode for quick one-time question-answering.
 `python main.py [--bot_mode <mode>] [--github_link <link>] [--question <question>]`
 
 * --bot_mode: Specify the mode for the bot, either chat or qa. Defaults to chat.
-
 * --github_link: Provide the GitHub repository link (optional).
-
 * --question: The question to be answered in 'qa' mode. Defaults to "what is github helper?".
+* --reload: Reload the git repository if it already exists locally. This option is not required; include it only if you want to force the repository to reload.
 
 Example :
 
@@ -169,7 +173,7 @@ helps in reducing the noise in the issue thread, as the bot will only reply when
 
 #### How to set up GitHub Webhook
 
-To use the GitHub webhook functionality in your app, follow these steps:
+To use the GitHub webhook functionality in your repository, follow these steps:
 
 1. Set up a webhook in your GitHub repository:
 
@@ -179,7 +183,7 @@ To use the GitHub webhook functionality in your app, follow these steps:
    * Enter your app's URL followed by /github_webhook in the "Payload URL" field (
      e.g., https://yourappdomain.com/github_webhook).
    * Select "application/json" as the "Content type."
-   * Choose the "Let me select individual events" option and check the "Issues" event.
+   * Choose the "Let me select individual events" option and check the "Issues" and "Issue comments" event.
    * Enter your Secret (Must be the same as defined in .env file `GITHUB_WEBHOOK_SECRET`)
    * Click "Add webhook" to save your settings.
 
@@ -219,21 +223,18 @@ directly from the console.
 * --bot_mode: Choose the mode for the bot: 'chat' or 'qa'. Default is 'chat'.
 * --github_link: The GitHub link for the repository to clone. Default is 'https://github.com/nasirus/github_helper.git'.
 * --question: The question to be answered in 'qa' mode. Default is 'what is github helper?'.
+* --reload: Reload the git repository if it already exists locally. This option is not required; include it only if you want to force the repository to reload.
 
 For 'qa' mode, use the following command:
 
 `python main.py --bot_mode qa --github_link https://github.com/user/repo.git --question "What is the main function of the project?"`
 
-### Q&A
+### Q&A Endpoint
 
 Send a POST request to the /qa endpoint with the following JSON payload:
 
 `curl -X POST -H "Content-Type: application/json" -d '{"question": "your_question_here"}' http://127.0.0.1:5000/qa
 `
-
-`{
-"question": "your_question_here"
-}`
 
 The response will include the generated answer:
 
