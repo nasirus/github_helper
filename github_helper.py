@@ -38,7 +38,9 @@ def github_reply(repo_owner: str, repo_name: str, issue_number: str, comment_bod
 
 
 def get_issue_comments(repo_owner, repo_name, issue_number):
-    access_token = os.environ.get('GITHUB_TOKEN')
+    access_token = os.getenv('GITHUB_TOKEN', "")
+    assert access_token, "GITHUB_TOKEN environment variable is missing from .env"
+
     url = f"https://api.github.com/repos/{repo_owner}/{repo_name}/issues/{issue_number}/comments"
     headers = {
         "Authorization": f"token {access_token}",
@@ -86,7 +88,9 @@ def get_github_link(args_github_link):
     if args_github_link:
         return args_github_link
     else:
-        env_github_link = os.environ.get('GITHUB_LINK')
+        env_github_link = os.getenv('GITHUB_LINK', "")
+        assert env_github_link, "GITHUB_LINK environment variable is missing from .env"
+
         if env_github_link:
             return env_github_link
         else:

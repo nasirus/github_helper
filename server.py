@@ -13,8 +13,10 @@ from llmhelper import LangchainHelper
 app = Flask(__name__)
 
 load_dotenv()
-github_link = os.environ.get('GITHUB_LINK')
-secret_key = os.environ.get('GITHUB_WEBHOOK_SECRET')
+
+github_link = os.getenv('GITHUB_LINK', "")
+assert github_link, "GITHUB_LINK environment variable is missing from .env"
+
 logging.basicConfig(level=logging.CRITICAL, format='%(asctime)s %(levelname)s %(message)s')
 
 module_name = clone_git_repo(github_link, False)
@@ -28,6 +30,9 @@ def health_check():
 
 @app.route('/github_webhook', methods=['POST'])
 def github_webhook():
+    secret_key = os.getenv('GITHUB_WEBHOOK_SECRET', "")
+    assert secret_key, "GITHUB_WEBHOOK_SECRET environment variable is missing from .env"
+
     webhook_secret = secret_key.encode()
 
     # Get the signature from the request headers

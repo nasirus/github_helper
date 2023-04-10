@@ -2,6 +2,12 @@
 
 # 💻 ❓ GitHub Helper
 
+Are you looking to ask questions about your favorite repository? 
+
+Do you want to integrate a helper for your issue management? 
+
+You've come to the right place!
+
 GitHub Helper is a Python application that leverages GPT-based language model to automatically respond to GitHub
 issues and provide chat and Q&A functionality.
 
@@ -55,13 +61,13 @@ deploy the GitHub Helper using Docker:
     `GITHUB_TOKEN=`
     
     `GITHUB_WEBHOOK_SECRET=`
-NB:
-    
-    - This example uses Azure OpenAI. If you want to use another LLM, you can set up
-      any [Langchain model](https://python.langchain.com/en/latest/modules/models/llms/integrations.html)
-      in [this file](https://github.com/nasirus/github_helper/blob/main/llmhelper.py#L12)
-      - `GITHUB_TOKEN` and `GITHUB_WEBHOOK_SECRET` are required only if you want to set up auto-reply in issues.
-      - `OPENAI_API_BASE` and `OPENAI_API_TYPE` are required only if you use AzureOpenAI
+
+NB:    
+   - This example uses Azure OpenAI. If you want to use another LLM, you can set up any [Langchain model](https://python.langchain.com/en/latest/modules/models/llms/integrations.html) in [this file](https://github.com/nasirus/github_helper/blob/main/llmhelper.py#L12) .
+
+   - `GITHUB_TOKEN` and `GITHUB_WEBHOOK_SECRET` are required only if you want to set up auto-reply in issues.
+
+   - `OPENAI_API_BASE` and `OPENAI_API_TYPE` are required only if you use AzureOpenAI
 
 3. Build the Docker image:
 
@@ -192,7 +198,7 @@ This chat interface is a minimal web-based UI for interacting with the Langchain
 conversation, has an input field for user messages, and a "Send" button. The interface is styled with an external CSS
 file and uses JavaScript for interaction with the Flask backend.
 
-### Command Line Chat Interface
+### Command Line
 
 The Command Line Chat Interface provides an interactive way for users to communicate with the Github Helper module
 directly from the console.
@@ -234,6 +240,19 @@ The response will include the generated answer:
 `{
 "result": "generated_answer_here"
 }`
+
+## Example
+
+There is some pretrained index so you can start asking your questions without indexing data :
+
+`python main.py --github_link https://github.com/nomic-ai/gpt4all --bot_mode qa --question "What is gpt4all ?"`
+
+`python main.py --github_link https://github.com/Torantulino/Auto-GPT --bot_mode qa --question "What is Auto-GPT?""`
+
+`python main.py --github_link https://github.com/microsoft/JARVIS --bot_mode qa --question "What is JARVIS?""`
+
+`python main.py --github_link https://github.com/microsoft/JARVIS --bot_mode qa --question "What is JARVIS?""`
+
 
 ## License
 
