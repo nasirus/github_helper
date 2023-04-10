@@ -18,7 +18,7 @@ def main(bot_mode, git_link, question):
 
     if bot_mode == "chat":
         chat_bot = langchain_helper.initialize_chat_bot()
-        print(f"Start chat with {module_name}, type your question")
+        print_wrapped_text(Fore.BLUE + f"Start chat with {module_name}, type your question")
 
         while True:
             query = input(Fore.GREEN + "-->")

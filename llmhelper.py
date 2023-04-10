@@ -34,13 +34,14 @@ class LangchainHelper:
         return chain
 
     def initialize_chat_bot(self):
-        conversational_chain = ConversationalRetrievalChain.from_llm(self.llm, self.db.as_retriever())
+        conversational_chain = ConversationalRetrievalChain.from_llm(self.llm, self.db.as_retriever(search_kwargs={
+            "k": 4}))
         return conversational_chain
 
     def assist_github_issue(self, issue_title, issue_comment):
         context = ""
         chain = self._create_llm_chain()
-        documents = self.db.similarity_search(query=issue_title, k=4)
+        documents = self.db.similarity_search(query=issue_title + " : " + issue_comment, k=4)
         for doc in documents:
             context += doc.page_content
         inputs = [
@@ -49,5 +50,7 @@ class LangchainHelper:
         return chain.apply(inputs)
 
     def answer_simple_question(self, query: str):
-        retrieval_qa = RetrievalQA.from_chain_type(llm=self.llm, chain_type="stuff", retriever=self.db.as_retriever())
+        retrieval_qa = RetrievalQA.from_chain_type(llm=self.llm
+                                                   , chain_type="stuff"
+                                                   , retriever=self.db.as_retriever(search_kwargs={"k": 4}))
         return retrieval_qa.run(query)
