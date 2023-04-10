@@ -9,7 +9,6 @@ from github_helper import clone_git_repo, get_github_link
 
 
 def main(bot_mode, git_link, question):
-    load_dotenv()
     chat_history = []
     module_name = clone_git_repo(git_link, False)
 
