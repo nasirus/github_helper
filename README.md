@@ -62,8 +62,8 @@ deploy the GitHub Helper using Docker:
     
     `GITHUB_WEBHOOK_SECRET=`
 
-NB:    
-   - This example uses Azure OpenAI. If you want to use another LLM, you can set up any [Langchain model](https://python.langchain.com/en/latest/modules/models/llms/integrations.html) in [this file](https://github.com/nasirus/github_helper/blob/main/llmhelper.py#L12) .
+    NB:    
+   - This example uses Azure OpenAI LLM by default. If you want to use another LLM, you can set up any [Langchain model](https://python.langchain.com/en/latest/modules/models/llms/integrations.html) in [this file](https://github.com/nasirus/github_helper/blob/main/llmhelper.py#L12) .
 
    - `GITHUB_TOKEN` and `GITHUB_WEBHOOK_SECRET` are required only if you want to set up auto-reply in issues.
 
@@ -147,7 +147,7 @@ using the LangchainHelper module, and post that response as a comment on the iss
 
 #### Key Components
 
-* Route: The /github_webhook route is used to receive webhook events from GitHub.
+* Route: The /github_webhook route is used to receive webhook events from Github.
 
 * Event handling: The webhook handler processes the opened event, which is triggered when a new issue is created.
 
@@ -241,18 +241,42 @@ The response will include the generated answer:
 "result": "generated_answer_here"
 }`
 
-## Example
+## Example 
+### QA
 
-There is some pretrained index so you can start asking your questions without indexing data :
+There is some pretrained index ,so you can start asking your questions without indexing data :
 
 `python main.py --github_link https://github.com/nomic-ai/gpt4all --bot_mode qa --question "What is gpt4all ?"`
 
-`python main.py --github_link https://github.com/Torantulino/Auto-GPT --bot_mode qa --question "What is Auto-GPT?""`
+`python main.py --github_link https://github.com/Torantulino/Auto-GPT --bot_mode qa --question "What is Auto-GPT?"`
 
-`python main.py --github_link https://github.com/microsoft/JARVIS --bot_mode qa --question "What is JARVIS?""`
+`python main.py --github_link https://github.com/microsoft/JARVIS --bot_mode qa --question "What is JARVIS?"`
 
-`python main.py --github_link https://github.com/microsoft/JARVIS --bot_mode qa --question "What is JARVIS?""`
+`python main.py --github_link https://github.com/hwchase17/langchain --bot_mode qa --question "which llm support streaming?"`
 
+You can find all pretrained index in "db" folder
+
+### Chat
+
+`python main.py --github_link https://github.com/hwchase17/langchain --bot_mode chat`
+
+### Chat UI
+
+![Chat Interface Example](/static/ChatInterfaceExample.png)
+
+### Automatically reply to newly opened GitHub issues
+
+[Real issue on Langchain fork](https://github.com/nasirus/langchain/issues) 
+
+[Real issue on llama_index fork](https://github.com/nasirus/llama_index/issues)
+
+### Try auto reply with local server :
+
+* Download ngrok for your platform at https://ngrok.com/download and unzip the file.
+* Open a terminal/command prompt in the ngrok folder.
+* Start your local web server on 5000 port ([server.py](https://github.com/nasirus/github_helper/blob/main/server.py)).
+* Run ./ngrok http 5000 in the terminal/command prompt to create a tunnel.
+* Copy the generated public URL and [follow those steps:](#how-to-set-up-github-webhook)
 
 ## License
 
