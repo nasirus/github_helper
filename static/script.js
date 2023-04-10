@@ -41,7 +41,7 @@ async function sendMessage() {
 
       const result = await response.json();
       const answerElement = document.createElement('div');
-      answerElement.textContent = result.result.answer;
+      answerElement.innerHTML = result.result.answer.replace(/\n/g, '<br>'); // Replace newline characters with <br>
       answerElement.classList.add('answer');
       chatMessages.appendChild(answerElement);
       chatMessages.scrollTop = chatMessages.scrollHeight;
