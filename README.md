@@ -1,4 +1,5 @@
 [![Build Az](https://github.com/nasirus/github_helper/actions/workflows/main_nasirus-github-helper.yml/badge.svg)](https://github.com/nasirus/github_helper/actions/workflows/main_nasirus-github-helper.yml)
+[![Open in Codespaces](https://img.shields.io/badge/Open%20in-Codespaces-blue?logo=github)](https://github.com/nasirus/github_helper/codespaces/new)
 
 # 💻 ❓ GitHub Helper
 

@@ -8,7 +8,7 @@ from typing import Dict, Optional
 import langchain.text_splitter
 import pypdf
 from langchain.document_loaders import TextLoader, NotebookLoader, UnstructuredMarkdownLoader, PyPDFLoader, \
-    UnstructuredImageLoader
+    UnstructuredImageLoader, UnstructuredPowerPointLoader, UnstructuredWordDocumentLoader
 from langchain.embeddings import HuggingFaceEmbeddings
 from langchain.vectorstores import Chroma
 
@@ -35,6 +35,8 @@ def init_db(path: str,
         '.txt': TextLoader,
         '.jpg': UnstructuredImageLoader,
         '.asciidoc': TextLoader,
+        '.pptx': UnstructuredPowerPointLoader,
+        '.docx': UnstructuredWordDocumentLoader,
     }
 
     def is_utf8(file_path: str) -> bool:
