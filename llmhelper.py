@@ -24,7 +24,7 @@ class LangchainHelper:
             Issue comment: {issue_comment}
             Context: {context}
             
-            Based on the information provided, please provide a response with code examples or corrections, explanation, and resources used, formatted appropriately for a GitHub comment. Do not include any additional explanations or introductory text. Add team signature at the end.
+            Based on the information provided, please provide a response with code examples or corrections, explanation, and resources used, formatted appropriately for a GitHub comment. Do not include any additional explanations or introductory text. Add """ + self.module_name + """ team signature at the end.
         """
 
         prompt = PromptTemplate(
