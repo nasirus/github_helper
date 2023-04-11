@@ -40,8 +40,9 @@ deploy the GitHub Helper using Docker:
 
 1. Clone this repository:
 
-    `git clone https://github.com/nasirus/github_helper.git
-    cd github-helper`
+    `git clone https://github.com/nasirus/github_helper.git`
+    
+    `cd github_helper`
 
 2. Set the required environment variables:
     
